@@ -1,0 +1,70 @@
+<div class="overlay-backdrop" (click)="close()"></div>
+
+<div
+  class="layout-column overlay-content"
+  (touchstart)="onTouchStart($event)"
+  (touchmove)="onTouchMove($event)"
+  (touchend)="onTouchEnd($event)"
+  (dblclick)="resetZoom()"
+  (click)="$event.stopPropagation()"
+>
+  @let item = currentItem();
+
+  <div class="layout layout-align-end-center header">
+    <a
+      [download]="item.name"
+      [href]="getFileUrl()"
+      class="layout layout-align-center-center download-icon"
+    >
+      <ico-download-icon [size]="32" [color]="'#ffffff'"></ico-download-icon>
+    </a>
+    <ico-close-icon [size]="32" [color]="'#ffffff'" (click)="close()"></ico-close-icon>
+  </div>
+
+  <div class="layout layout-row flex-grow carousel-container">
+    @let isLeftDisabled = currentIndex() === 0;
+    <button class="nav prev" (click)="prev()" [disabled]="isLeftDisabled">
+      <ico-chevron-left-icon [size]="32" [color]="isLeftDisabled ? '#808080' : '#ffffff'"></ico-chevron-left-icon>
+    </button>
+
+    @if (item) {
+      <div class="layout layout-column layout-align-center-center image-wrapper">
+        <div class="layout layout-align-center-center flex-grow zoomable-container">
+          <div
+            class="zoomable-content"
+            [style.transform]="'scale(' + currentScale() + ') translate(' + translateX() + 'px, ' + translateY() + 'px)'"
+          >
+            @switch (item.type) {
+              @case (GalleryItemType.VIDEO) {
+                <app-video-player [name]="item.name">
+                  <app-thumb
+                    preview
+                    [subPath]="subPath()"
+                    [thumbSize]="ThumbSize.PREVIEW"
+                    [rootDirName]="rootDir()"
+                    [filePath]="item.name"
+                  ></app-thumb>
+                </app-video-player>
+              }
+              @case (GalleryItemType.IMAGE) {
+                <app-thumb
+                  [subPath]="subPath()"
+                  [thumbSize]="ThumbSize.PREVIEW"
+                  [rootDirName]="rootDir()"
+                  [filePath]="item.name"
+                  (click)="$event.stopPropagation()"
+                ></app-thumb>
+              }
+            }
+          </div>
+        </div>
+        <div class="caption">{{ item.name }}</div>
+      </div>
+    }
+
+    @let isRightDisabled = currentIndex() === items().length - 1;
+    <button class="nav next" (click)="next()" [disabled]="isRightDisabled">
+      <ico-chevron-right-icon [size]="32" [color]="isRightDisabled ? '#808080' : '#ffffff'"></ico-chevron-right-icon>
+    </button>
+  </div>
+</div>

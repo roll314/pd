@@ -1,0 +1,52 @@
+@switch (fsItem().type) {
+  @case (FSItemType.FOLDER) {
+    <div class="layout layout-column">
+      <ico-folder-icon [size]="unsupportedIconSize()"></ico-folder-icon>
+      @if (showUnsupportedNames()) {
+        <div
+          class="layout layout-column layout-align-center-center layout-top-margin_2 item-name ellipsis"
+          [attr.title]="fsItem().name"
+        >
+          {{fsItem().name}}
+        </div>
+      }
+    </div>
+  }
+  @case (FSItemType.FILE) {
+    @if(isFileSupported) {
+      <app-thumb
+        [filePath]="fsItem().name"
+        [rootDirName]="rootDir()"
+        [subPath]="subPath()"
+        [thumbSize]="thumbSize()"
+        (loaded)="loaded.emit()"
+      ></app-thumb>
+    } @else {
+      <div class="layout layout-column layout-align-center-center">
+        @switch (fileType) {
+          @case (UnsupportedFileType.DOC) {
+            <ico-doc-icon [size]="unsupportedIconSize()"></ico-doc-icon>
+          }
+          @case (UnsupportedFileType.PDF) {
+            <ico-pdf-icon [size]="unsupportedIconSize()"></ico-pdf-icon>
+          }
+          @case (UnsupportedFileType.TEXT) {
+            <ico-text-icon [size]="unsupportedIconSize()"></ico-text-icon>
+          }
+          @case (UnsupportedFileType.UNKNOWN) {
+            <ico-unknown-file-icon [size]="unsupportedIconSize()"></ico-unknown-file-icon>
+          }
+        }
+
+        @if (showUnsupportedNames()) {
+          <div
+            class="layout layout-column layout-align-center-center layout-top-margin_2 item-name ellipsis"
+            [attr.title]="fsItem().name"
+          >
+            {{fsItem().name}}
+          </div>
+        }
+      </div>
+    }
+  }
+}

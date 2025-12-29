@@ -1,0 +1,62 @@
+{
+  "httpsServer": {
+    "port": 8080,
+    "hostname": "0.0.0.0",
+    "certCrtPath": "./server.crt",
+    "certKeyPath": "./server.key",
+    "clientDir": "./static",
+    "logLevel": "REQUEST",
+    "thumbCacheIntervalSec": 86400
+  },
+  "davServer": {
+    "rootDirPhysicalPath": "/dav/pseudo_root",
+    "port": 2000,
+    "hostname": "0.0.0.0",
+    "certCrtPath": "./server.crt",
+    "certKeyPath": "./server.key",
+    "defaultUserQuotaBytes": -1,
+    "totalDiskSizeBytes": 107374182400,
+    "users": [
+      {
+        "quotaBytes": -1,
+        "username": "dummy",
+        "password": "password",
+        "rootDirectories": [{
+          "name": "testDir",
+          "physicalPath": "/dav/test",
+          "roles": [
+            "canWrite",
+            "all"
+          ]
+        }]
+      }
+    ],
+    "logLevel": "REQUEST"
+  },
+  "thumbGeneration": {
+    "pathToThumbs": "/dav/tmp",
+    "IMAGE": {
+      "pathToNConvert": "./bin/nx/NConvert/nconvert",
+      "parallelFactor": 10,
+      "previewThumbSizePx": 1200,
+      "gridThumbSizePx": 200,
+      "smallThumbSizePx": 60,
+      "bigThumbSizePx": 200
+    },
+    "VIDEO": {
+      "pathToFFMpeg": "./bin/nx/ffmpeg/bin/ffmpeg",
+      "parallelFactor": 10,
+      "previewThumbSizePx": 1200,
+      "previewVideoSizePx": 400,
+      "gridThumbSizePx": 200,
+      "smallThumbSizePx": 60,
+      "bigThumbSizePx": 200
+    }
+  },
+  "db": {
+    "host": "db"
+  },
+  "common": {
+    "logLevel": ["ERROR", "WARN", "INFO", "LOG"]
+  }
+}

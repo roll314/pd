@@ -1,0 +1,14 @@
+<div class="grid">
+  @for(item of folderData(); track item.uid) {
+    <div class="grid-item">
+      <app-fs-item-icon
+        [fsItem]="item"
+        [showUnsupportedNames]="true"
+        [rootDir]="rootDir()"
+        [subPath]="subPath()"
+        [thumbSize]="ThumbSize.GRID"
+        (click)="itemClick.emit(item)"
+      ></app-fs-item-icon>
+    </div>
+  }
+</div>

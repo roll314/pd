@@ -1,0 +1,16 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+mat-spinner {
+  $size: 80%;
+  max-height: $size;
+  max-width: $size;
+}
+
+img {
+  max-height: 100%;
+  max-width: 100%;
+}

@@ -1,0 +1,18 @@
+FROM denoland/deno:2.4.0
+
+WORKDIR /app
+
+COPY ./static /app/static
+
+RUN deno task cache
+
+COPY . .
+
+RUN deno task build_nx
+
+VOLUME /mnt/archive
+
+EXPOSE ${SERVER_HTTPS_PORT}
+EXPOSE ${SERVER_DAV_PORT}
+
+CMD ["./dist/pd.server"]

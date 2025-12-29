@@ -1,0 +1,123 @@
+
+services:
+
+  client-builder:
+    image: node:24
+    env_file:
+      - ./pd.server/.env
+    environment:
+      NODE_ENV: production
+    working_dir: /app
+    volumes:
+      - ./pd.client:/app
+      - ./shared:/shared
+    command: sh -c "yarn install --frozen-lockfile && yarn build --output-path=../pd.server/static"
+    profiles: ["prod"]
+
+  server:
+    build:
+      context: ./pd.server
+      dockerfile: Dockerfile
+    env_file:
+      - ./pd.server/.env
+    volumes:
+      - ./pd.server:/app
+      - ./shared:/shared
+      - /mnt/archive:/mnt/archive
+    ports:
+      - "${SERVER_HTTPS_PORT}:${SERVER_HTTPS_PORT}"
+      - "${SERVER_DAV_PORT}:${SERVER_DAV_PORT}"
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      LD_LIBRARY_PATH: /app/bin/nx/ffmpeg/lib # for correct ffmpeg working
+    depends_on:
+      db:
+        condition: service_healthy
+      client-builder:
+        condition: service_completed_successfully
+    profiles: ["prod"]
+
+  client-dev:
+    image: node:24
+    env_file:
+      - ./pd.server/.env
+    working_dir: /app
+    volumes:
+      - ./pd.client:/app
+      - ./shared:/shared
+    ports:
+      - "${CLIENT_PORT}:${CLIENT_PORT}"
+    networks:
+      - app-network
+    command: sh -c "yarn install && yarn start --host 0.0.0.0 --port 4200"
+    environment:
+      NODE_ENV: development
+      CHOKIDAR_USEPOLLING: "true" # for hot-reload in Docker
+      WATCHPACK_POLLING: "true"
+    profiles: ["dev"]
+    depends_on:
+      - server-dev
+
+  server-dev:
+    image: denoland/deno:2.4.0
+    env_file:
+      - ./pd.server/.env
+    working_dir: /app
+    volumes:
+      - ./pd.server:/app
+      - ./shared:/shared
+      - "C:/dav/test:/dav/test"
+      - "C:/dav/pseudo_root:/dav/pseudo_root"
+      - "C:/dav/tmp:/dav/tmp"
+    ports:
+      - "${SERVER_HTTPS_PORT}:${SERVER_HTTPS_PORT}"
+      - "${SERVER_DAV_PORT}:${SERVER_DAV_PORT}"
+    expose:
+      - "${SERVER_HTTPS_PORT}"
+      - "${SERVER_DAV_PORT}"
+    networks:
+      - app-network
+    command: deno run --watch -A --env-file main.ts -c ./config_docker.json
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      LD_LIBRARY_PATH: /app/bin/nx/ffmpeg/lib # for correct ffmpeg working
+    profiles: ["dev"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:15
+    hostname: ${SERVER_DB_HOST}
+    env_file:
+      - ./pd.server/.env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

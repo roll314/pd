@@ -1,0 +1,8 @@
+@if (isLoggedIn) {
+  <div class="layout layout-fill layout-column">
+    <app-common-header></app-common-header>
+    <router-outlet></router-outlet>
+  </div>
+} @else {
+  <router-outlet></router-outlet>
+}

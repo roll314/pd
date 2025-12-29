@@ -1,0 +1,34 @@
+import {Component, Input, HostBinding, ChangeDetectionStrategy} from '@angular/core';
+
+@Component({
+  selector: 'ico-play-icon',
+  template: `
+    <svg [attr.fill]="color" [attr.height]="size + 'px'" [attr.width]="size + 'px'" xmlns="http://www.w3.org/2000/svg"
+       xmlns:xlink="http://www.w3.org/1999/xlink"
+       viewBox="0 0 512.055 512.055" xml:space="preserve">
+      <g>
+        <g>
+          <path d="M500.235,236.946L30.901,2.28C16.717-4.813,0.028,5.502,0.028,21.361v469.333c0,15.859,16.689,26.173,30.874,19.081
+            l469.333-234.667C515.958,267.247,515.958,244.808,500.235,236.946z M42.694,456.176V55.879l400.297,200.149L42.694,456.176z"/>
+        </g>
+      </g>
+    </svg>
+  `,
+  styles: [
+    `
+      :host {
+        display: block
+      }
+    `
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class PlayIconComponent {
+  @HostBinding('style.width.px')
+  @HostBinding('style.height.px')
+  @Input({required:true})
+  size?: number;
+
+  @Input()
+  color = '#000000';
+}

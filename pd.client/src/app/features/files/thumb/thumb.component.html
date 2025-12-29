@@ -1,0 +1,16 @@
+@if (isThumbReady()) {
+  <app-img-loader
+    [src]="thumbUrl"
+    [alt]="'thumb'"
+    (loaded)="loaded.emit()"
+    (error)="onFetchThumbError()"
+  ></app-img-loader>
+} @else {
+  @if (isFetching()) {
+    <mat-spinner></mat-spinner>
+  } @else {
+    @if(isFetchError()) {
+      <ico-error-file-icon [size]="64"></ico-error-file-icon>
+    }
+  }
+}

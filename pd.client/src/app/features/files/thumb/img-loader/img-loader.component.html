@@ -1,0 +1,10 @@
+@if(!isLoaded()) {
+  <mat-spinner></mat-spinner>
+}
+<img
+  [style.display]="!isLoaded() ? 'none' : 'block'"
+  [src]="src()"
+  [attr.alt]="alt()"
+  (load)="onLoad()"
+  (error)="error.emit()"
+/>

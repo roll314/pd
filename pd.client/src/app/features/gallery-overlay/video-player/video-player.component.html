@@ -1,0 +1,42 @@
+@if (isVideoBusy() && !isPreviewShown()) {
+  <div class="video-busy-spinner-container">
+    <mat-spinner [diameter]="64"></mat-spinner>
+  </div>
+}
+
+<video #video [volume]="volume()" [style.display]="!isPreviewShown() ? 'block' : 'none'" [src]="videoUrl()"></video>
+
+@if (!isEnded()) {
+  <div class="main-buttons">
+    @if (isPaused()) {
+      <ico-play-icon [size]="128" [color]="'#ffffff'"></ico-play-icon>
+    } @else {
+      <ico-pause-icon [size]="128" [color]="'#ffffff'" [applySizeToHost]="false"></ico-pause-icon>
+    }
+  </div>
+}
+
+@if (isPreviewShown()) {
+  <ng-content select="[preview]"></ng-content>
+} @else {
+
+<!--
+  @if (!isVideoBusy()) {
+-->
+  <div class="layout-row layout-align-center-center control-panel" (click)="$event.stopPropagation()">
+    <mat-slider min="0" [max]="duration()" step="0.5" class="layout flex-grow seeker">
+      <input matSliderThumb [value]="currentTime()" (valueChange)="setCurrentTimeThrottled($event)">
+    </mat-slider>
+
+    <ico-speaker-icon [size]="24" [color]="'#ffffff'"></ico-speaker-icon>
+
+    <mat-slider [disableRipple]="false" min="0" max="1" step="0.01" (input)="volume.set(volumeEl.valueAsNumber)">
+      <input #volumeEl matSliderThumb [value]="volume()">
+    </mat-slider>
+  </div>
+<!--
+  }
+-->
+}
+
+

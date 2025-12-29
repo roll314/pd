@@ -1,0 +1,25 @@
+<div class="layout layout-fill layout-align-center-center">
+  <div class="layout-column layout-bottom-padding_16 flex-grow">
+    <mat-form-field>
+      <mat-label>Username</mat-label>
+      <input matInput type="text" [(ngModel)]="username">
+      @if (username) {
+        <button matSuffix matIconButton aria-label="Clear" (click)="username=''">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input matInput type="password" [(ngModel)]="password">
+      @if (password) {
+        <button matSuffix matIconButton aria-label="Clear" (click)="password=''">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+
+    <button matButton="filled" [disabled]="!username || !password" (click)="login()">Login</button>
+  </div>
+</div>

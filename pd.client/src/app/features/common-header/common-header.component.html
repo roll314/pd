@@ -1,0 +1,10 @@
+<div class="layout layout-row flex-grow container">
+  <div class="flex-grow"><h2>Peter drive</h2></div>
+  <div class="layout layout-row layout-align-end-center user-info">
+    <div class="ellipsis">
+      @let sessionInfo = userSessionInfo();
+      {{sessionInfo?.user?.username}}
+    </div>
+    <button matButton="filled" class="flex-noshrink logout-button" (click)="logout()">Logout</button>
+  </div>
+</div>

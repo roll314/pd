@@ -1,0 +1,27 @@
+:host {
+  display: flex;
+}
+
+.container {
+  $height: 64px;
+  min-height: $height;
+  height: $height;
+  max-height: $height;
+
+
+  .user-info {
+    $width: 200px;
+    min-width: $width;
+    width: $width;
+    max-width: $width;
+
+    .logout-button {
+      $width: 100px;
+      min-width: $width;
+      width: $width;
+      max-width: $width;
+
+      margin-left: 16px;
+    }
+  }
+}

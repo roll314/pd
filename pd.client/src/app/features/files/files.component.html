@@ -1,0 +1,77 @@
+@if (isGalleryShown()) {
+  <app-gallery-overlay
+    [items]="galleryItems() ?? []"
+    [selectedId]="selectedImageId()"
+    (closed)="isGalleryShown.set(false)"
+  ></app-gallery-overlay>
+}
+
+<div class="layout-column flex-grow" style="position: relative;">
+  <div class="layout-column layout-bottom-margin_8 flex-noshrink nav-bar">
+    <div class="layout-row layout-bottom-margin_8 flex-noshrink">
+      <mat-form-field class="layout-right-margin_8 no-subscript">
+        <mat-label>Root dir</mat-label>
+        <mat-select [formControl]="selectedRootDir">
+          @for (folder of rootFolders$ | async; track folder) {
+            <mat-option [value]="folder">{{folder}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <div class="layout layout-align-center-center">
+        <mat-slide-toggle
+          [checked]="viewType() === ViewType.GRID"
+          (change)="$event.checked ? viewType.set(ViewType.GRID) : viewType.set(ViewType.TABlE)"
+        >
+          Grid mode
+        </mat-slide-toggle>
+      </div>
+    </div>
+    <div class="layout-row">
+      @if(subPathArr().length > 1) {
+        <div class="layout layout-left-margin_16 layout-align-center-center flex-noshrink">
+          <ico-up-icon [size]="24" (click)="goUp()"></ico-up-icon>
+        </div>
+      }
+      <div class="layout-row flex-grow layout-left-margin_16 layout-align-start-center file-path">
+        @for (subItem of subPathArr(); track subItem; let isFirst = $first; let isLast = $last; let index = $index) {
+          <div class="layout-right-padding_8 sub-path-item" (click)="goToSubPath(index)">{{subItem}}</div>
+          @if (!isFirst && !isLast) {
+            <div class="layout-right-padding_8">/</div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+  <div
+    class="files-container"
+    (scroll)="onScroll($event)"
+  >
+    @if (isFirstPageFetching()) {
+      <mat-spinner></mat-spinner>
+    } @else {
+      @switch (viewType()) {
+        @case (ViewType.GRID) {
+          <app-grid-view
+            [subPath]="subPath()"
+            [folderData]="folderData()"
+            [rootDir]="selectedRootDir.value"
+            (itemClick)="onItemClick($event)"
+          ></app-grid-view>
+        }
+        @case (ViewType.TABlE) {
+          <app-table-view
+            [subPath]="subPath()"
+            [folderData]="folderData()"
+            [rootDir]="selectedRootDir.value"
+            (rowClick)="onItemClick($event)"
+          ></app-table-view>
+        }
+      }
+    }
+  </div>
+  @if (isNextPageFetching()) {
+    <div class="next-fetch-wrapper">
+      <mat-spinner [diameter]="128"></mat-spinner>
+    </div>
+  }
+</div>

@@ -1,0 +1,40 @@
+table {
+  width: 100%;
+
+  .fs-cell-column {
+    padding: 4px 0;
+
+    ico-download-icon {
+      margin-right: 8px;
+      cursor: pointer;
+    }
+
+    app-fs-item-icon {
+      margin-right: 8px;
+      $size: 64px;
+      max-height: $size;
+      max-width: $size;
+    }
+  }
+
+  .size-column {
+    width: 130px;
+  }
+
+  .changedat-column {
+    width: 200px;
+  }
+
+  .createdat-column {
+    width: 200px;
+  }
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  background-color: azure;
+  cursor: pointer;
+}
+
+.download-icon {
+  height: 64px;
+}

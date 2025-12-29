@@ -1,0 +1,50 @@
+<table mat-table [dataSource]="folderData()" class="mat-elevation-z8">
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Name </th>
+    <td mat-cell *matCellDef="let item" (click)="rowClick.emit(item)">
+      <div class="layout layout-row layout-align-start-center fs-cell-column">
+        @if (item.type === FSItemType.FILE) {
+          <a
+            [download]="item.name"
+            [href]="getFileUrl(item, true)"
+            class="layout layout-align-center-center download-icon"
+            (click)="$event.stopPropagation()"
+          >
+            <ico-download-icon [size]="24"></ico-download-icon>
+          </a>
+        }
+        <app-fs-item-icon
+          [fsItem]="item"
+          [rootDir]="rootDir()"
+          [subPath]="subPath()"
+          [thumbSize]="ThumbSize.SMALL"
+        ></app-fs-item-icon>
+        <div class="ellipsis">{{item.name}}</div>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="size">
+    <th mat-header-cell *matHeaderCellDef> Size </th>
+    <td mat-cell *matCellDef="let item" class="size-column">
+      {{item.type === FSItemType.FILE ? (item.size | fileSize) : 'Folder'}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="changedAt">
+    <th mat-header-cell *matHeaderCellDef> Changed at </th>
+    <td mat-cell *matCellDef="let item" class="changedat-column">
+      {{item.changedAt | date:'dd.MM.yyyy hh:mm:ss'}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="createdAt">
+    <th mat-header-cell *matHeaderCellDef> Created at </th>
+    <td mat-cell *matCellDef="let item" class="createdat-column">
+      {{item.createdAt | date:'dd.MM.yyyy hh:mm:ss'}}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
