@@ -29,7 +29,7 @@ export enum ViewType {
 
 
 const SCROLL_THRESHOLD_PX = 100;
-const FILES_LIMIT = 30;
+const FILES_LIMIT = 500;
 
 
 @Component({
