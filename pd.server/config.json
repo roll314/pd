@@ -6,7 +6,7 @@
     "certKeyPath": "./server.key",
     "clientDir": "../pd.client/dist/client/browser",
     "logLevel": "REQUEST",
-    "thumbCacheIntervalSec": 86400
+    "thumbCacheIntervalSec": 31536000
   },
   "davServer": {
     "rootDirPhysicalPath": "c:/dav/pseudo_root",

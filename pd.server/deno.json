@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "dev": "deno run --watch main.ts",
+    "dev": "deno run -A --watch main.ts",
     "build_nx": "deno compile -A --env-file --output ./dist/pd.server --target=x86_64-unknown-linux-gnu main.ts ",
     "build_win": "deno compile -A --env-file --output ./dist/pd.server.exe --target=x86_64-pc-windows-msvc main.ts ",
     "create_migrations": "deno --env -A --env-file --node-modules-dir npm:drizzle-kit generate",

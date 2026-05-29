@@ -19,6 +19,10 @@ export class LoginApiService {
     return this.http.post<AuthRes>('/api/auth', req);
   }
 
+  logout(): Observable<void> {
+    return this.http.post<void>('/api/logout', {});
+  }
+
   mySession(): Observable<UserSessionInfo> {
     return this.http.get<UserSessionInfo>('/api/mySession');
   }

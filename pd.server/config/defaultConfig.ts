@@ -22,7 +22,7 @@ export const defaultConfig: DeepReadonly<IConfig> = {
     certKeyPath: './server.key',
     clientDir: '../pd.client/dist/client/browser',
     logLevel: HttpLogLevel.REQUEST,
-    thumbCacheIntervalSec: 86400,
+    thumbCacheIntervalSec: 31536000,
   },
   davServer: {
     rootDirPhysicalPath: '/home_nas_pseudo_root',

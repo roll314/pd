@@ -18,6 +18,10 @@ export function getUserSessionBySessionToken(
   return USER_SESSIONS.find((session) => session.sessionToken === sessionToken);
 }
 
+export function removeUserSession(sessionToken: string) {
+  return USER_SESSIONS = USER_SESSIONS.filter((session) => session.sessionToken !== sessionToken);
+}
+
 export function removeExpiredUserSessions() {
   USER_SESSIONS = USER_SESSIONS.filter((session) =>
     +session.expiredAt > Date.now()

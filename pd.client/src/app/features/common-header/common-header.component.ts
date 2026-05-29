@@ -1,7 +1,6 @@
 import {ChangeDetectionStrategy, Component, Signal} from '@angular/core';
 import {LoginService} from '../../services/login.service';
 import {UserSessionInfo, UserSessionStoreService} from '../../services/user-session-store.service';
-import {JsonPipe} from '@angular/common';
 import {MatButton} from '@angular/material/button';
 
 @Component({

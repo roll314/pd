@@ -1,23 +1,19 @@
 import {Injectable} from '@angular/core';
-import {catchError, filter, map, NEVER, Observable, of, tap} from 'rxjs';
+import {catchError, map, NEVER, Observable, of, tap} from 'rxjs';
 import {LoginApiService} from '../api/login-api.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {AuthRes} from '../model/api/auth-res';
 import {UserSessionInfo, UserSessionStoreService} from './user-session-store.service';
-
-const USER_SESSION_STORAGE_KEY = 'userSession';
+import { USER_SESSION_EXPIRED_AT_COOKIE_KEY } from '../../../../shared/authConst';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
   get isLoggedIn(): boolean {
-    return !!this.userSession;
-  }
-
-  get userSession(): string | undefined | null {
-    return localStorage.getItem(USER_SESSION_STORAGE_KEY);
+    return !!this.cookieService.get(USER_SESSION_EXPIRED_AT_COOKIE_KEY);
   }
 
   constructor(
@@ -25,6 +21,7 @@ export class LoginService {
     private userSessionStoreService: UserSessionStoreService,
     private matSnackBar: MatSnackBar,
     private router: Router,
+    private cookieService: CookieService,
   ) {
   }
 
@@ -36,7 +33,6 @@ export class LoginService {
           return NEVER;
         }),
         tap((res: AuthRes) => {
-          localStorage.setItem(USER_SESSION_STORAGE_KEY, res.sessionToken);
           this.router.navigate(['files']);
         }),
         map(() => undefined)
@@ -44,8 +40,10 @@ export class LoginService {
   }
 
   logout() {
-    localStorage.removeItem(USER_SESSION_STORAGE_KEY);
-    this.router.navigate(['/auth']);
+    this.loginApiService.logout()
+      .subscribe(() => {
+        this.router.navigate(['/auth']);
+      });
   }
 
   fetchUserSessionInfo(): Observable<UserSessionInfo | null> {

@@ -13,6 +13,7 @@ import { mySession } from './routes/mySession.ts';
 import { staticFiles } from './middleware/staticFiles.ts';
 import { getThumb } from './routes/getThumb.ts';
 import { getVideoPreview } from './routes/videoPreview.ts';
+import { logout } from './routes/logout.ts';
 
 export type IRootFoldersResponse = string | { rootFolders: string[] };
 
@@ -36,6 +37,8 @@ export function initHttp(
   app.use(router.allowedMethods());
 
   auth(router, davManagers);
+
+  logout(router);
 
   mySession(router);
 

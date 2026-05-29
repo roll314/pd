@@ -8,6 +8,7 @@ import {IUserSession} from '../utils/userSessions.ts';
 import {Router} from '@oak/oak';
 import {CommonErrorResponse} from '../models/commonErrorResponse.ts';
 import { getConfig } from '../../config/getConfig.ts';
+import { getEtag } from '../utils/getEtag.ts';
 
 export interface IGetThumbRequest {
   filePath: string;
@@ -47,6 +48,10 @@ export function getThumb(router: Router) {
 
     const filestream = await Deno.open(thumbPath, { read: true });
 
+    const etag = await getEtag(thumbPath);
+    if (etag) {
+      ctx.response.headers.set("etag", etag);
+    }
     ctx.response.headers.set('Cache-Control', `public, max-age=${thumbCacheIntervalSec}`);
     ctx.response.headers.set('Expires', new Date(Date.now() + thumbCacheIntervalSec * 1000).toUTCString());
     ctx.response.status = 200;

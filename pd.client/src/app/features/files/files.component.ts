@@ -94,10 +94,6 @@ export class FilesComponent {
       }))
   );
 
-  get session(): string {
-    return this.loginService.userSession!;
-  }
-
   readonly ViewType = ViewType;
 
   readonly viewType = signal<ViewType>(ViewType.GRID);

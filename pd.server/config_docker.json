@@ -6,7 +6,7 @@
     "certKeyPath": "./server.key",
     "clientDir": "./static",
     "logLevel": "REQUEST",
-    "thumbCacheIntervalSec": 86400
+    "thumbCacheIntervalSec": 31536000
   },
   "davServer": {
     "rootDirPhysicalPath": "/dav/pseudo_root",

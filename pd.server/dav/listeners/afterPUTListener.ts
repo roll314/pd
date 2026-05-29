@@ -6,21 +6,6 @@ import { isFileSupported } from '../../../shared/isFileSupported.ts';
 
 export const afterPUTListener: RequestListener = (arg, next) => {
   if (
-    arg.request.method === 'MOVE' && arg.response.statusCode >= 200 &&
-    arg.response.statusCode < 300
-  ) {
-    const a = 1;
-    const destination = arg.headers.headers.destination;
-  }
-
-  if (
-    arg.request.method === 'MKCOL' && arg.response.statusCode >= 200 &&
-    arg.response.statusCode < 300
-  ) {
-    const a = 1;
-  }
-
-  if (
     arg.request.method === 'PUT' && arg.response.statusCode >= 200 &&
     arg.response.statusCode < 300
   ) {
@@ -44,7 +29,7 @@ export const afterPUTListener: RequestListener = (arg, next) => {
 
     generateThumb(fullFilePath)
       .catch((e) =>
-        log(`Cannot generate thumb for ${fullFilePath}: ${(e as Error).message}`, LogLevel.LOG, SystemPart.THUMB)
+        log(`Cannot generate thumb for ${fullFilePath}: ${(e as Error).message}`, LogLevel.LOG, SystemPart.DAV)
       );
   }
 

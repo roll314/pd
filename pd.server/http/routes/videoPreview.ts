@@ -7,6 +7,7 @@ import {IUserSession} from '../utils/userSessions.ts';
 import {Router} from '@oak/oak';
 import {CommonErrorResponse} from '../models/commonErrorResponse.ts';
 import { getVideoPreviewFilePath } from '../../thumb/getVideoPreviewFilePath.ts';
+import { getEtag } from '../utils/getEtag.ts';
 
 export interface IGetVideoPreviewRequest {
   filePath: string;
@@ -43,6 +44,11 @@ export function getVideoPreview(router: Router) {
 
     const fileInfo = await Deno.stat(thumbPath);
     const fileSize = fileInfo.size;
+
+    const etag = await getEtag(thumbPath);
+    if (etag) {
+      ctx.response.headers.set("etag", etag);
+    }
 
     // Check for range headers
     const range = ctx.request.headers.get('range');
