@@ -13,4 +13,9 @@ mat-spinner {
 img {
   max-height: 100%;
   max-width: 100%;
+  opacity: 0;
+
+  &.loaded {
+    opacity: 1;
+  }
 }

@@ -41,6 +41,8 @@ export function initDavServer(): IDavManagers {
       'Default realm',
     ),
     requireAuthentification: true,
+    // mount_webdav отклоняет абсолютные DAV:href, которые пакет всегда строит с http://.
+    respondWithPaths: true,
     privilegeManager,
     storageManager,
     hostname: davHostname,

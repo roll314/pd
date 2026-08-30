@@ -11,6 +11,9 @@ export class StorageService {
   readonly subPathArr = signal(['/']);
   readonly subPathArr$ = toObservable(this.subPathArr);
 
-  readonly subPath = computed(() => this.subPathArr().join('/'));
+  readonly subPath = computed(() => {
+    const pathItems = this.subPathArr().filter(item => item !== '/');
+    return `/${pathItems.join('/')}`;
+  });
   readonly subPath$ = toObservable(this.subPath);
 }

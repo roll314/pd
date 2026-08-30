@@ -1,6 +1,6 @@
 import {getArgs} from '../utils/getArgs.ts';
 // @ts-types='npm:@types/lodash-es'
-import lodash from 'npm:lodash-es@4.17.21';
+import * as lodash from 'npm:lodash-es@4.17.21';
 import {defaultConfig} from './defaultConfig.ts';
 import { IConfig, IDotEnvConfig } from './models.ts';
 

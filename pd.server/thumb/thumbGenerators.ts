@@ -7,6 +7,7 @@ import {
 } from "../config/models.ts";
 import { documentThumbGenerator } from './document/documentThumbGenerator.ts';
 import { videoThumbGenerator } from './video/videoThumbGenerator.ts';
+import { ThumbSize } from '../../shared/thumbSize.ts';
 
 export type ThumbGeneratorConfigMap = {
   [SupportedFileType.IMAGE]: IImageThumbGeneratorConfig;
@@ -17,6 +18,7 @@ export type ThumbGeneratorConfigMap = {
 export type IThumbGenerator<K extends SupportedFileType> = (
   filePath: string,
   config: ThumbGeneratorConfigMap[K],
+  thumbSize: ThumbSize,
 ) => Promise<void>;
 
 export type IThumbGenerators = {

@@ -43,6 +43,7 @@
                     [thumbSize]="ThumbSize.PREVIEW"
                     [rootDirName]="rootDir()"
                     [filePath]="item.name"
+                    [version]="item.changedAt"
                   ></app-thumb>
                 </app-video-player>
               }
@@ -52,6 +53,7 @@
                   [thumbSize]="ThumbSize.PREVIEW"
                   [rootDirName]="rootDir()"
                   [filePath]="item.name"
+                  [version]="item.changedAt"
                   (click)="$event.stopPropagation()"
                 ></app-thumb>
               }

@@ -3,6 +3,7 @@ import { IThumbGenerator, THUMB_GENERATORS, ThumbGeneratorConfigMap } from '../t
 import {getConfig} from '../config/getConfig.ts';
 import {log, LogLevel, SystemPart} from '../utils/log.ts';
 import {LOCKED_ERROR} from './lockedError.ts';
+import {ThumbSize} from '../../shared/thumbSize.ts';
 
 
 export enum GenerateThumbError {
@@ -11,7 +12,10 @@ export enum GenerateThumbError {
   NOT_FOUND_THUMB_GENERATOR_CONFIG = 'NOT_FOUND_THUMB_GENERATOR_CONFIG',
 }
 
-export async function generateThumb(filePath: string): Promise<void> {
+export async function generateThumb(
+  filePath: string,
+  thumbSize: ThumbSize,
+): Promise<void> {
   if (!isFileSupported(filePath)) {
     throw new Error(GenerateThumbError.FILE_DOES_NOW_SUPPORTED);
   }
@@ -33,9 +37,9 @@ export async function generateThumb(filePath: string): Promise<void> {
   const generator = foundThumbGenerator as IThumbGenerator<typeof fileType>;
 
   try {
-    return await generator(filePath, foundThumbGeneratorConfig);
+    return await generator(filePath, foundThumbGeneratorConfig, thumbSize);
   } catch (e) {
-    if ((e as Error | undefined)?.name === LOCKED_ERROR) {
+    if ((e as Error | undefined)?.message === LOCKED_ERROR) {
       log(
         `>>>>>> SKIP: Thumb generating for ${filePath} was skipped due to LOCKED and gonna be generated in the another thread`,
         LogLevel.WARN,

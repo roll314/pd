@@ -1,7 +1,13 @@
 export function getFileUrl(fileName: string, rootDir: string, subPath: string, download = false): string {
-  let uri = `/api/file?filePath=${fileName}&rootDirName=${rootDir}&subPath=${subPath}`;
+  const params = new URLSearchParams({
+    filePath: fileName,
+    rootDirName: rootDir,
+    subPath,
+  });
+
   if (download) {
-    uri += `&download=true`;
+    params.set('download', 'true');
   }
-  return uri;
+
+  return `/api/file?${params.toString()}`;
 }

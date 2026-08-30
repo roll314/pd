@@ -19,6 +19,7 @@
         [rootDirName]="rootDir()"
         [subPath]="subPath()"
         [thumbSize]="thumbSize()"
+        [version]="fsItem().changedAt"
         (loaded)="loaded.emit()"
       ></app-thumb>
     } @else {

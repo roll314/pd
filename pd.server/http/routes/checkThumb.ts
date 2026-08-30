@@ -6,11 +6,9 @@ import {isFileExists} from '../../thumb/isFileExists.ts';
 import {findPhysicalPath} from '../../utils/findPhysicalPath.ts';
 import {IUserSession} from '../utils/userSessions.ts';
 import {isFileSupported} from '../../../shared/isFileSupported.ts';
-import {generateThumb} from '../../dav/generateThumb.ts';
-import {log, LogLevel, SystemPart} from '../../utils/log.ts';
 import { Router } from '@oak/oak';
 import {CommonErrorResponse} from '../models/commonErrorResponse.ts';
-import { getConfig } from '../../config/getConfig.ts';
+import {getThumbGenerationError, scheduleThumbGeneration} from '../../thumb/thumbGenerationJobs.ts';
 
 export interface ICheckThumbRequest {
   filePath: string;
@@ -57,16 +55,17 @@ export function checkThumb(router: Router) {
       return;
     }
 
-    try {
-      await generateThumb(filePath);
-    } catch (e) {
-      log(`Cannot generate thumb for ${filePath}: ${(e as Error).message}`, LogLevel.LOG, SystemPart.THUMB);
+    const generationError = getThumbGenerationError(filePath, query.thumbSize);
+    if (generationError) {
       ctx.response.status = 500;
-      ctx.response.body = { error: 'Cannot generate thumb' } as CommonErrorResponse;
-
+      ctx.response.body = {error: generationError.message} as CommonErrorResponse;
       return;
     }
 
+    // Генерация выполняется в фоновой очереди. Клиент опросит этот endpoint повторно.
+    scheduleThumbGeneration(filePath, query.thumbSize)
+      .catch(() => undefined);
+    ctx.response.headers.set('Retry-After', '1');
     ctx.response.status = 202;
   });
 }

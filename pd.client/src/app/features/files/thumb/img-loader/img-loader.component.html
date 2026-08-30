@@ -1,10 +1,14 @@
 @if(!isLoaded()) {
   <mat-spinner></mat-spinner>
 }
-<img
-  [style.display]="!isLoaded() ? 'none' : 'block'"
-  [src]="src()"
-  [attr.alt]="alt()"
-  (load)="onLoad()"
-  (error)="error.emit()"
-/>
+@if (activeSrc(); as imageSrc) {
+  <img
+    [class.loaded]="isLoaded()"
+    [src]="imageSrc"
+    [attr.alt]="alt()"
+    loading="lazy"
+    decoding="async"
+    (load)="onLoad()"
+    (error)="onError()"
+  />
+}

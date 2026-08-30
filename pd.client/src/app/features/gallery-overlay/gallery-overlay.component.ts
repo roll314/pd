@@ -34,6 +34,7 @@ export interface GalleryItem {
   uid: string;
   name: string;
   type: GalleryItemType;
+  changedAt: number;
 }
 
 @Component({

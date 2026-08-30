@@ -29,6 +29,7 @@ export const beforeDELETEListener: RequestListener = (arg, next) => {
       getThumbFilePath(getThumbFileHashSource(fullFilename, ThumbSize.PREVIEW)),
       getThumbFilePath(getThumbFileHashSource(fullFilename, ThumbSize.SMALL)),
       getThumbFilePath(getThumbFileHashSource(fullFilename, ThumbSize.BIG)),
+      getThumbFilePath(getThumbFileHashSource(fullFilename, ThumbSize.GRID)),
       getVideoPreviewFilePath(getThumbFileHashSource(fullFilename, ThumbSize.PREVIEW)),
     ].forEach(async thumbFilePath => {
       const isThumbExists = await isFileExists(thumbFilePath);

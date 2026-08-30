@@ -6,8 +6,7 @@ export async function getEtag(filePath: string): Promise<string | null> {
     const mtimeMs = fileInfo.mtime?.getTime() || 0;
     const etagBase = `${mtimeMs}-${fileInfo.size}`;
     const hash = Md5.hashStr(etagBase);
-    // return `W/"${hash}"`;
-    return hash;
+    return `"${hash}"`;
   } catch {
     return null;
   }

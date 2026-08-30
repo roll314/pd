@@ -1,14 +1,16 @@
 import fs from "node:fs";
+import {LOCKED_ERROR} from '../dav/lockedError.ts';
 
 export function touchFile(filename: string) {
-  fs.open(filename, "w", (err, fd) => {
-    if (err) {
-      throw err;
+  // Флаг wx атомарно создаёт lock-файл и исключает гонку между параллельными задачами.
+  try {
+    const fd = fs.openSync(filename, 'wx');
+    fs.closeSync(fd);
+  } catch (e) {
+    if ((e as NodeJS.ErrnoException).code === 'EEXIST') {
+      throw new Error(LOCKED_ERROR);
     }
-    fs.close(fd, (err) => {
-      if (err) {
-        throw err;
-      }
-    });
-  });
+
+    throw e;
+  }
 }

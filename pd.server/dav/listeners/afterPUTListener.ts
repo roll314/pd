@@ -1,8 +1,9 @@
 import {RequestListener} from 'npm:webdav-server@2.6.2/lib/server/v2/webDAVServer/BeforeAfter.d.ts';
 import {findPhysicalPath} from '../../utils/findPhysicalPath.ts';
 import {log, LogLevel, SystemPart} from '../../utils/log.ts';
-import {generateThumb} from '../generateThumb.ts';
 import { isFileSupported } from '../../../shared/isFileSupported.ts';
+import {scheduleThumbGeneration} from '../../thumb/thumbGenerationJobs.ts';
+import {ThumbSize} from '../../../shared/thumbSize.ts';
 
 export const afterPUTListener: RequestListener = (arg, next) => {
   if (
@@ -27,10 +28,13 @@ export const afterPUTListener: RequestListener = (arg, next) => {
       return next();
     }
 
-    generateThumb(fullFilePath)
-      .catch((e) =>
-        log(`Cannot generate thumb for ${fullFilePath}: ${(e as Error).message}`, LogLevel.LOG, SystemPart.DAV)
-      );
+    // Для списков заранее нужны только лёгкие варианты. Большой preview создаётся при открытии галереи.
+    [ThumbSize.GRID, ThumbSize.SMALL].forEach(thumbSize => {
+      scheduleThumbGeneration(fullFilePath, thumbSize)
+        .catch((e) =>
+          log(`Cannot generate ${thumbSize} thumb for ${fullFilePath}: ${(e as Error).message}`, LogLevel.LOG, SystemPart.DAV)
+        );
+    });
   }
 
   next();

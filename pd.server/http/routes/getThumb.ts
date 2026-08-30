@@ -45,15 +45,26 @@ export function getThumb(router: Router) {
 
     const config = getConfig();
     const thumbCacheIntervalSec = config.httpsServer.thumbCacheIntervalSec;
-
-    const filestream = await Deno.open(thumbPath, { read: true });
-
+    const fileInfo = await Deno.stat(thumbPath);
     const etag = await getEtag(thumbPath);
+
     if (etag) {
       ctx.response.headers.set("etag", etag);
     }
-    ctx.response.headers.set('Cache-Control', `public, max-age=${thumbCacheIntervalSec}`);
+    ctx.response.headers.set('Cache-Control', `private, max-age=${thumbCacheIntervalSec}, immutable`);
     ctx.response.headers.set('Expires', new Date(Date.now() + thumbCacheIntervalSec * 1000).toUTCString());
+    ctx.response.headers.set('Content-Type', 'image/jpeg');
+
+    const ifNoneMatch = ctx.request.headers.get('if-none-match');
+    const requestedEtags = ifNoneMatch?.split(',').map(value => value.trim()) ?? [];
+    if (etag && (requestedEtags.includes(etag) || requestedEtags.includes('*'))) {
+      // При совпадении валидатора тело файла не передаётся повторно.
+      ctx.response.status = 304;
+      return;
+    }
+
+    ctx.response.headers.set('Content-Length', fileInfo.size.toString());
+    const filestream = await Deno.open(thumbPath, { read: true });
     ctx.response.status = 200;
     ctx.response.body = filestream.readable;
   });

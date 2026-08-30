@@ -90,6 +90,7 @@ export class FilesComponent {
       .map(item => ({
         uid: item.uid,
         name: item.name,
+        changedAt: item.changedAt,
         type: getFileType(item.name) === SupportedFileType.VIDEO ? GalleryItemType.VIDEO : GalleryItemType.IMAGE,
       }))
   );

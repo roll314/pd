@@ -19,8 +19,8 @@ export class UrlService {
     return getFileUrl(itemName, this.storageService.rootDir(), this.storageService.subPath(), download);
   }
 
-  getThumbUrl(itemName: string, thumbSize: ThumbSize): string {
-    return getThumbUrl(itemName, this.storageService.rootDir(), this.storageService.subPath(), thumbSize);
+  getThumbUrl(itemName: string, thumbSize: ThumbSize, version: number): string {
+    return getThumbUrl(itemName, this.storageService.rootDir(), this.storageService.subPath(), thumbSize, version);
   }
 
   getVideoPreviewUrl(itemName: string, thumbSize: ThumbSize): string {
